@@ -1,0 +1,20 @@
+name: Uptime Check
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  workflow_dispatch:         # allows manual run from the Actions tab
+
+jobs:
+  check-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request the live site
+        run: |
+          URL="https://kshirsagar-mahesh.github.io/SWYNEX-Basic-Cloud-Deployment/"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Site check failed"
+            exit 1
+          fi
